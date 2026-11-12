@@ -50,7 +50,7 @@ Doing it by hand is the same three steps: put a checkout somewhere stable, run
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugins": ["/home/eric/.local/share/opencode-native-sidebar"]
+  "plugins": ["/home/eric/.local/share/opencode-agents/plugin"]
 }
 ```
 
