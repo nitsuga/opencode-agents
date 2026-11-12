@@ -8,27 +8,14 @@
 // its model variant, and spins only next to the agents that are working right
 // now. The roster and activity come straight from the host's data layer, so
 // unlike the v1 plugin there is no server half and no snapshot file to sync.
-import { StyledText, fg } from "@opentui/core";
+import { RGBA as TuiColor } from "@opentui/core";
 import { Plugin } from "@opencode/plugin/tui";
 import { createMemo, createSignal } from "solid-js";
 
 type Context = Plugin.Context;
+type Theme = Context["theme"];
 
 const SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
-
-type Theme = Plugin.Context["theme"];
-
-// The theme's RGBA and OpenTUI's ColorInput come from different packages, so the
-// types are nominally distinct even though the values are identical at runtime.
-const paint = (color: unknown, text: string) => fg(color as never)(text);
-
-/** Effort is shown through the theme's text ramp: quiet at low, brightest at high. */
-function effortColor(theme: Theme, variant: string): unknown {
-  const v = variant.toLowerCase();
-  if (v === "minimal" || v === "none" || v === "low") return theme.text.faint;
-  if (v === "medium") return theme.text.muted;
-  return theme.text.base;
-}
 
 // One pair of clocks for every mounted panel. The host renders `sidebar.content`
 // in more than one place (the side region and the narrow-screen layout), so a
@@ -39,8 +26,28 @@ const [beat, setBeat] = createSignal(0);
 setInterval(() => setFrame((value) => value + 1), 60);
 setInterval(() => setBeat((value) => value + 1), 1000);
 
-function NativePanel(props: { ctx: Context; sessionID: string }) {
+/**
+ * The theme exposes its own RGBA class, and the renderer rejects foreign
+ * instances: convert into the renderer's own type so the value is accepted.
+ */
+function color(value: unknown): string | TuiColor {
+  const source = value as { toInts?: () => [number, number, number, number] };
+  if (typeof source?.toInts === "function") {
+    const [r, g, b, a] = source.toInts();
+    return TuiColor.fromInts(r, g, b, a);
+  }
+  return String(value);
+}
 
+/** Effort rides the theme's text ramp: quiet at low, brightest at high effort. */
+function effortColor(theme: Theme, variant: string): string | TuiColor {
+  const value = variant.replace(/^#/, "").toLowerCase();
+  if (value === "minimal" || value === "none" || value === "low") return theme.text.faint;
+  if (value === "medium") return theme.text.muted;
+  return theme.text.base;
+}
+
+function NativePanel(props: { ctx: Context; sessionID: string }) {
   // Which agents are working. A subagent runs in a child session, so the whole
   // session family has to be consulted — checking only the visible session
   // would spin every row whenever anything was running.
@@ -56,37 +63,56 @@ function NativePanel(props: { ctx: Context; sessionID: string }) {
     return busy;
   });
 
-  // One text node for the whole panel. Control-flow components (`For`, `Show`)
-  // do not reconcile when this file is loaded from an installed package under
-  // node_modules, and static/reactive text does — so the rows are joined rather
-  // than mapped into child elements.
-  const panel = createMemo(() => {
+  const rows = createMemo(() => {
     beat();
-    const theme = props.ctx.theme;
     const glyph = SPINNER[frame() % SPINNER.length];
     const busy = busyAgents();
-    const agents = (props.ctx.data.location.agent.list() ?? []).filter((agent) => !agent.hidden);
-    const chunks = [paint(theme.text.muted, "Native")];
-
-    for (const agent of agents) {
-      const variant = agent.model?.variant ?? "";
-      const model = agent.model?.id ?? "default";
-      const running = busy.has(String(agent.id));
-
-      chunks.push(paint(theme.text.base, `\n${agent.name.padEnd(13)}`));
-      if (variant) chunks.push(paint(effortColor(theme, variant), `#${variant}`));
-      // Spinner sits to the left of the model, on its own line.
-      chunks.push(paint(theme.text.faint, "\n  "));
-      chunks.push(paint(running ? theme.text.feedback.success.base : theme.text.faint, running ? glyph : " "));
-      chunks.push(paint(theme.text.faint, ` ${model}`));
-    }
-
-    return new StyledText(chunks);
+    return (props.ctx.data.location.agent.list() ?? [])
+      .filter((agent) => !agent.hidden)
+      .map((agent) => {
+        const running = busy.has(String(agent.id));
+        return {
+          name: agent.name.padEnd(13),
+          variant: agent.model?.variant ? `#${agent.model.variant}` : "",
+          model: agent.model?.id ?? "default",
+          ticker: running ? glyph : " ",
+          running,
+        };
+      });
   });
+
+  const theme = () => props.ctx.theme;
 
   return (
     <box style={{ flexDirection: "column", paddingLeft: 1, paddingRight: 1 }}>
-      <text content={panel()} wrapMode="none" />
+      <text wrapMode="none" style={{ fg: color(theme().text.muted) }}>
+        Native
+      </text>
+      {rows().map((row) => (
+        <box style={{ flexDirection: "column" }}>
+          <box style={{ flexDirection: "row" }}>
+            <text wrapMode="none" style={{ fg: color(theme().text.base) }}>
+              {row.name}
+            </text>
+            {row.variant ? (
+              <text wrapMode="none" style={{ fg: color(effortColor(theme(), row.variant)) }}>
+                {row.variant}
+              </text>
+            ) : null}
+          </box>
+          <box style={{ flexDirection: "row" }}>
+            <text
+              wrapMode="none"
+              style={{ fg: color(row.running ? theme().text.feedback.success.base : theme().text.faint) }}
+            >
+              {`  ${row.ticker} `}
+            </text>
+            <text wrapMode="none" style={{ fg: color(theme().text.faint) }}>
+              {row.model}
+            </text>
+          </box>
+        </box>
+      ))}
     </box>
   );
 }
