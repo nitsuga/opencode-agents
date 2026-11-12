@@ -27,8 +27,10 @@ _(`type: Concept` — durable domain / design knowledge.)_
 
 * [Plugin architecture](./decisions/0002-single-tui-plugin.md) — how the panel gets
   its roster, activity, and layout in v2 (recorded as an ADR rather than prose).
-* [Agent roster](./decisions/0004-consolidate-agent-roster.md) — why the roster is
-  the canonical v2 agents with our prompts, and what that trades off.
+* [Agent roster and model assignments](./agents.md) — who exists, what each does,
+  and the model variant each runs at.
+* [Agent roster decision](./decisions/0004-consolidate-agent-roster.md) — why the
+  roster is the canonical v2 agents with our prompts, and what that trades off.
 
 ## Components
 

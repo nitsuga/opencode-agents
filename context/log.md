@@ -2,6 +2,12 @@
 
 ## 2026-11-12
 
+* Reviewed model and variant assignments, recorded in
+  [`agents.md`](./agents.md): `explore` raised `low` → `medium` (it now does
+  external research), `designer` raised to `luna#xhigh`, `observer` lowered to
+  `luna#medium`; `orchestrator`, `general`, and `oracle` unchanged — higher oracle
+  rungs showed diminishing quality per token and per second.
+
 * Consolidated the agent roster onto canonical v2 agents
   ([ADR 0004](./decisions/0004-consolidate-agent-roster.md)): deleted `scout`
   (external research now routes to `explore`), added `agents/explore.md` as a

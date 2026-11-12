@@ -20,8 +20,8 @@ config and agent definitions are tracked here and symlinked into
 
 ## Next
 
-1. Watch whether `explore` at `#low` holds up now that it also does external
-   research; raise it to `#high` in `config/opencode.jsonc` if it does not.
+1. Revisit the variant pins after a week of real use — the open question is whether
+   `designer` earns `luna#xhigh` and `observer` is fine at `luna#medium`.
 2. Re-test a package plugin install once
    [issue #1](https://github.com/nitsuga/opencode-agents/issues/1) is resolved.
 

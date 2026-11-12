@@ -71,9 +71,11 @@ no native equivalent).
 - `explore` and `general` are now *custom prompts over canonical agents*. Future
   OpenCode releases may change those agents' native behavior, modes, or permission
   defaults underneath our overrides; re-read this ADR when upgrading.
-- `explore` stays at `#low`. If merged local+external research proves
-  under-powered, raise it to `#high` — that is a model change in
-  `config/opencode.jsonc`, not a new agent.
+- `explore` moved from `#low` to `#medium` once it absorbed external research;
+  `designer` went to `luna#xhigh` and `observer` down to `luna#medium`. `oracle`
+  stays at `deepseek#high` deliberately — higher rungs showed diminishing quality
+  per token and per second. The roster table and the reasoning behind each pin live
+  in [`../agents.md`](../agents.md).
 - Sessions created earlier that named `scout` or `fixer` reference agents that no
   longer exist; new turns use the canonical roster.
 - The orchestrator's brief-writing rules now name `general`; the discipline those
