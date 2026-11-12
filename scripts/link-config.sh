@@ -8,6 +8,10 @@
 # Symlinks, not copies: edits are live immediately (agent files hot-reload) and
 # the two cannot drift. Never touches service.json, which holds the server
 # password, or any *.bak* file.
+#
+# cli.json is deliberately NOT linked: OpenCode rewrites it when it persists TUI
+# settings (it writes a plain file, replacing a symlink). `scripts/install.sh`
+# owns its `plugins` entry instead.
 set -euo pipefail
 
 REPO="$(cd "$(dirname "$(readlink -f "$0")")/.." && pwd)"
@@ -28,7 +32,6 @@ PAIRS=(
   "$REPO/skills|skills"
   "$REPO/config/AGENTS.md|AGENTS.md"
   "$REPO/config/opencode.jsonc|opencode.jsonc"
-  "$REPO/config/cli.json|cli.json"
 )
 
 fail=0

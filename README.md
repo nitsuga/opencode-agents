@@ -31,6 +31,12 @@ cd opencode-agents
 
 Both are idempotent and take `--check` to report drift without changing anything.
 
+`scripts/link-config.sh` links `agents/`, `skills/`, `config/AGENTS.md`, and
+`config/opencode.jsonc`. It deliberately does **not** touch `cli.json` or
+`service.json`: OpenCode rewrites `cli.json` when it persists TUI settings, and
+`service.json` holds the server password. The `plugins` entry in `cli.json` is
+`install.sh`'s job.
+
 ## Install
 
 ```bash

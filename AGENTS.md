@@ -111,8 +111,10 @@ So:
   - `agents/` — agent definitions, symlinked into `~/.config/opencode/agents`.
     Editing these changes live sessions on their next turn.
   - `skills/` — skills, symlinked into `~/.config/opencode/skills`.
-  - `config/` — `opencode.jsonc`, `cli.json`, and the runtime `AGENTS.md`,
-    symlinked into `~/.config/opencode`. Never put a secret here.
+  - `config/` — `opencode.jsonc` and the runtime `AGENTS.md`, symlinked into
+    `~/.config/opencode`. Never put a secret here. `cli.json` is **not** tracked:
+    OpenCode rewrites it when it persists TUI settings, so `install.sh` owns its
+    `plugins` entry.
   - `plugin/` — the sidebar plugin. `plugin/tui.tsx` must stay at that
     directory's root, because a local plugin directory resolves `tui.tsx` by root
     filename (ADR 0002).

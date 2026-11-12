@@ -2,6 +2,17 @@
 
 ## 2026-11-12
 
+* Plugin panel: rows are now intrinsic text nodes with theme colours — agent name
+  at `text.base`, effort on the text ramp, model at `text.faint`, spinner in
+  `text.feedback.success` — and the spinner moved to the left of the model. Theme
+  colours are converted into the renderer's own `RGBA` class; passing the theme's
+  instances renders nothing.
+* Dropped `config/cli.json` from tracking and from `link-config.sh`: OpenCode
+  rewrites `cli.json` when it persists TUI settings, replacing the symlink with a
+  plain file, which left a stale plugin path behind and made plugin edits appear
+  broken. `install.sh` owns that entry; ADR 0003 records the rule that
+  host-written files are never symlinked.
+
 * Reviewed model and variant assignments, recorded in
   [`agents.md`](./agents.md): `explore` raised `low` → `medium` (it now does
   external research), `designer` raised to `luna#xhigh`, `observer` lowered to

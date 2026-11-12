@@ -23,8 +23,10 @@ The plugin was already in its own repo (`opencode-native-sidebar`).
 Track the configuration in the **same repo as the plugin**, renamed
 `opencode-agents` to say what it is:
 
-- `agents/`, `skills/`, and `config/{opencode.jsonc,cli.json,AGENTS.md}` are the
-  tracked copies.
+- `agents/`, `skills/`, and `config/{opencode.jsonc,AGENTS.md}` are the tracked
+  copies. `cli.json` is excluded: OpenCode rewrites it when it persists TUI
+  settings (a plain write, which replaces a symlink), so `scripts/install.sh`
+  owns its `plugins` entry instead.
 - `scripts/link-config.sh` **symlinks** them into `~/.config/opencode`, so the
   tracked copy is the live copy: edits deploy immediately and the two cannot drift.
 - Secrets stay out: `service.json` (the server password), `*.bak*`, and
@@ -52,5 +54,10 @@ Track the configuration in the **same repo as the plugin**, renamed
 - The repo must exist on the machine: deleting the working copy breaks the live
   config, because the symlinks point into it.
 - `scripts/link-config.sh --check` is the drift guard; run it after moving the repo.
+- Files the host writes must not be symlinked. `cli.json` proved it: linking it
+  worked until the first sidebar toggle replaced the link with a plain file while
+  the tracked copy silently kept a stale plugin path — which then made every
+  plugin edit look broken. Host-owned state belongs to the install script, not to
+  a link.
 - GitHub redirects the old `opencode-native-sidebar` URLs, and issue #1 moved with
   the repo.
