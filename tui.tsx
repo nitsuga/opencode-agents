@@ -1,3 +1,7 @@
+/** @jsxImportSource @opentui/solid */
+// The pragma above is load-bearing: when this package is installed (and so lives
+// under node_modules), Bun does not apply a project tsconfig.json, and JSX would
+// otherwise compile against the React runtime, which the host does not provide.
 // native-sidebar — OpenCode v2 TUI plugin.
 //
 // Renders a small panel in the `sidebar.content` slot listing every agent with
