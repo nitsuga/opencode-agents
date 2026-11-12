@@ -61,17 +61,39 @@ function AgentPanel(props: {
   // Which agents are working. A subagent runs in a child session, so the whole
   // session family has to be consulted — checking only the visible session
   // would spin every row whenever anything was running.
+  // Always measured from the root of the family, so the panel keeps the full
+  // picture even while a subagent's session is the one on screen.
+  const rootSession = createMemo(() => {
+    beat();
+    return props.ctx.data.session.root(props.sessionID);
+  });
+
+  const rootAgent = createMemo(() => {
+    beat();
+    const info = props.ctx.data.session.get(rootSession());
+    return info?.agent ? String(info.agent) : undefined;
+  });
+
+  // Agent id -> the child session currently running it. Subagents run in their
+  // own session, so this is also what a click on the row should focus.
   const busyAgents = createMemo(() => {
     beat();
     const { session } = props.ctx.data;
-    const busy = new Set<string>();
-    for (const id of session.family(props.sessionID)) {
+    const busy = new Map<string, string>();
+    for (const id of session.family(rootSession())) {
       if (session.status(id) !== "running") continue;
       const info = session.get(id);
-      if (info?.agent) busy.add(String(info.agent));
+      if (info?.agent) busy.set(String(info.agent), id);
     }
     return busy;
   });
+
+  /** Show that agent's session, the way v1 cycled subagent windows. */
+  const focusAgent = (sessionID: string) => {
+    // `tabs.focus` returns true for a child session but does not change the view,
+    // so navigation is what actually shows a subagent's output.
+    props.ctx.ui.router.navigate({ type: "session", sessionID });
+  };
 
   const rows = createMemo(() => {
     beat();
@@ -80,19 +102,24 @@ function AgentPanel(props: {
     return (props.ctx.data.location.agent.list() ?? [])
       .filter((agent) => !agent.hidden)
       .map((agent) => {
-        const running = busy.has(String(agent.id));
+        const running = busy.get(String(agent.id));
+        // The root agent is always clickable, so the user can get back to the
+        // orchestrator from any subagent's output.
+        const target = running ?? (String(agent.id) === rootAgent() ? rootSession() : undefined);
         return {
           name: agent.name.padEnd(13),
           variant: agent.model?.variant ? `#${agent.model.variant}` : "",
           model: agent.model?.id ?? "default",
           ticker: running ? glyph : " ",
-          running,
+          running: running !== undefined,
+          target,
         };
       });
   });
 
   const theme = () => props.ctx.theme;
   const collapsed = () => props.collapsed.collapsed;
+  const [hovered, setHovered] = createSignal<string | null>(null);
   const working = createMemo(() => rows().filter((row) => row.running).length);
 
   // Collapsed shows the count, plus what is working, so hiding the rows does not
@@ -129,9 +156,21 @@ function AgentPanel(props: {
         ) : null}
       </box>
       {collapsed() ? null : rows().map((row) => (
-        <box style={{ flexDirection: "column" }}>
+        <box
+          style={{ flexDirection: "column" }}
+          onMouseDown={row.target ? () => focusAgent(row.target!) : undefined}
+          onMouseOver={row.target ? () => setHovered(row.name) : undefined}
+          onMouseOut={row.target ? () => setHovered(null) : undefined}
+        >
           <box style={{ flexDirection: "row" }}>
-            <text wrapMode="none" style={{ fg: color(theme().text.base) }}>
+            <text
+              wrapMode="none"
+              style={{
+                fg: color(
+                  hovered() === row.name ? theme().text.feedback.success.base : theme().text.base,
+                ),
+              }}
+            >
               {row.name}
             </text>
             {row.variant ? (
@@ -168,6 +207,19 @@ export default Plugin.define({
     ctx.keymap.layer(() => ({
       mode: "global",
       commands: [
+        {
+          id: "native-sidebar.root",
+          title: "Return to the orchestrator session",
+          description: "Leave an agent's output and go back to the session that spawned it",
+          palette: true,
+          bind: "<leader>o",
+          run: () => {
+            const route = ctx.ui.router.current();
+            if (route.type !== "session") return;
+            const root = ctx.data.session.root(route.sessionID);
+            if (root && root !== route.sessionID) ctx.ui.router.navigate({ type: "session", sessionID: root });
+          },
+        },
         {
           id: "native-sidebar.toggle",
           title: "Toggle agent list",

@@ -2,6 +2,13 @@
 
 ## 2026-11-12
 
+* Agent rows are clickable: a running agent navigates to its child session, and the
+  orchestrator row is always clickable so there is a way back. Hover tints the name
+  on clickable rows. Two findings shaped it: `ui.tabs.focus()` returns `true` for a
+  child session but does not move the view (only `router.navigate` does), and a
+  child session's screen has no sidebar at all, so `ctrl+x b` cannot bring it back
+  — hence a `<leader>o` ("Return to the orchestrator session") command.
+
 * Panel header renamed `Native` → `Agents` with a collapse caret, matching the MCP
   section: `▼ Agents` expanded, `▶ Agents (8)` collapsed, and
   `▶ Agents (8 · ⠹ 1 working)` while work is in flight, so the spinner and the

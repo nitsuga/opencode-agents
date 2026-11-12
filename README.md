@@ -106,6 +106,15 @@ Collapsed it shows the agent count, and while work is in flight a live spinner
 plus how many agents are working — so hiding the rows does not hide the activity.
 The collapsed state persists across restarts.
 
+Clicking an agent's row shows that agent's output: a running agent focuses its own
+child session, and the orchestrator row is always clickable so you can get back.
+Clickable rows tint on hover.
+
+`ctrl+x o` (or the command palette) returns to the orchestrator from any agent's
+output. That binding matters because a child session's view has no sidebar — the
+row click that got you there is not on screen to click back. (`ctrl+x b` does not
+restore it; `ctrl+x l` lists all sessions as another way back.)
+
 ## Develop
 
 ```bash
