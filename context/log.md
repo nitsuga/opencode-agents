@@ -2,6 +2,16 @@
 
 ## 2026-11-12
 
+* Consolidated the agent roster onto canonical v2 agents
+  ([ADR 0004](./decisions/0004-consolidate-agent-roster.md)): deleted `scout`
+  (external research now routes to `explore`), added `agents/explore.md` as a
+  merged local+external research brief over the built-in, and renamed
+  `agents/fixer.md` to `agents/general.md` enabling the native `general` with the
+  same implementation discipline. `orchestrator.md` now allowlists `general`,
+  and `config/opencode.jsonc` drops the two model entries and pins `general` to
+  `muse-spark #high`. Roster: `orchestrator`, `explore`, `general`, `oracle`,
+  `designer`, `observer`.
+
 * Renamed to `opencode-agents` and took on the OpenCode configuration
   ([ADR 0003](./decisions/0003-track-opencode-config.md)): `agents/`, `skills/`,
   `config/{opencode.jsonc,cli.json,AGENTS.md}` are tracked and symlinked into

@@ -1,5 +1,5 @@
 ---
-description: Hands-on implementation worker for bounded coding tasks. Use after the objective and scope are sufficiently understood.
+description: Hands-on implementation worker for bounded coding tasks. Use after the objective and scope are sufficiently understood; handles edits, test runs, and mechanical follow-up.
 mode: subagent
 permissions:
 - action: edit

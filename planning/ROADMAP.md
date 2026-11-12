@@ -21,9 +21,12 @@ variants and live activity.
 
 - **Phase 0 — Port (done)**: single TUI plugin, roster and activity from the host
   data layer, verified in a live session.
-- **Phase 1 — Distribution (next)**: a real install path — npm package or a Git
-  spec — instead of an absolute local directory.
-- **Phase 2 — GUI part (deferred)**: the same panel in the browser and desktop
+- **Phase 1 — Track and consolidate the config (done)**: the agent definitions,
+  skills, and configuration are versioned here and symlinked into place (ADR 0003),
+  and the roster was reduced to canonical v2 agents with our prompts (ADR 0004).
+- **Phase 2 — Distribution (blocked)**: a real plugin install path — npm or a Git
+  spec — once the reactivity issue (#1) is resolved.
+- **Phase 3 — GUI part (deferred)**: the same panel in the browser and desktop
   clients via the `Panel` registry.
 
 ## Open forks
