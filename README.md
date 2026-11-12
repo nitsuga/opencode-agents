@@ -34,13 +34,13 @@ Both are idempotent and take `--check` to report drift without changing anything
 ## Install
 
 ```bash
-git clone git@github.com:nitsuga/opencode-native-sidebar.git
-cd opencode-native-sidebar
+git clone git@github.com:nitsuga/opencode-agents.git
+cd opencode-agents
 ./scripts/install.sh
 ```
 
 The script clones (or fast-forwards) a checkout at
-`~/.local/share/opencode-native-sidebar`, installs its dependencies, and points
+`~/.local/share/opencode-agents/plugin`, installs its dependencies, and points
 `plugins` in `~/.config/opencode/cli.json` at it. Re-run it to update; `--check`
 verifies the configured install is intact; `--target DIR` installs elsewhere.
 
@@ -61,12 +61,12 @@ which only works for an installed package, and a checkout silently loads nothing
 ### Why not a package install
 
 Installing this repo as a package (`opencode plugin add
-github:nitsuga/opencode-native-sidebar`) *loads* — the host resolves `tui.tsx` and
+github:nitsuga/opencode-agents`) *loads* — the host resolves `tui.tsx` and
 the panel's first paint renders. But **no reactive update ever reaches the
 renderer**: not from the plugin's signals, and not from the host's own `storage`
 store. Measured on OpenCode 2.2.7: a checkout shows all agents updating live; the
 installed package renders once with whatever the first paint saw and then stays
-frozen. Tracked in [issue #1](https://github.com/nitsuga/opencode-native-sidebar/issues/1);
+frozen. Tracked in [issue #1](https://github.com/nitsuga/opencode-agents/issues/1);
 until it behaves, use the checkout path (`scripts/install.sh`).
 
 Two further packaging gotchas, both load-blocking:

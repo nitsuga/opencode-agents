@@ -1,4 +1,4 @@
-# opencode-native-sidebar — Roadmap
+# opencode-agents — Roadmap
 
 The plan: scope, sequencing, and **open** forks. Living doc — rewrite freely. For
 "where are we right now" see [PROGRESS.md](./PROGRESS.md). Resolved forks and

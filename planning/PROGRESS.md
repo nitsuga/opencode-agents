@@ -1,4 +1,4 @@
-# opencode-native-sidebar — Progress
+# opencode-agents — Progress
 
 Current status only — **present tense, volatile, rewrite freely**. The
 chronological history (what landed when, decision detail) lives in
@@ -8,7 +8,7 @@ chronological history (what landed when, decision detail) lives in
 
 ## Now
 
-Installed at `~/.local/share/opencode-native-sidebar` by `scripts/install.sh`,
+Installed at `~/.local/share/opencode-agents/plugin` by `scripts/install.sh`,
 which keeps `cli.json` pointing at a checkout — the only path that renders live.
 The panel lists every visible agent with its model variant and spins for the
 agents actually working.
@@ -19,7 +19,7 @@ agents actually working.
 
 ## Next
 
-1. Re-test a package install once [issue #1](https://github.com/nitsuga/opencode-native-sidebar/issues/1)
+1. Re-test a package install once [issue #1](https://github.com/nitsuga/opencode-agents/issues/1)
    (no reactive updates from an installed package) is resolved, and switch
    `scripts/install.sh` over if it is.
 

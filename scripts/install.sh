@@ -39,7 +39,7 @@ if not os.path.exists(path):
     raise SystemExit
 data = json.load(open(path))
 for entry in data.get("plugins", []):
-    if isinstance(entry, str) and "opencode-native-sidebar" in entry:
+    if isinstance(entry, str) and ("opencode-agents" in entry or "opencode-native-sidebar" in entry):
         print(entry)
         break
 PY
@@ -49,7 +49,7 @@ if $check_only; then
   status=0
   entry="$(configured)"
   if [[ -z $entry ]]; then
-    echo "FAIL: no opencode-native-sidebar entry in $CLI_CONFIG" >&2; status=1
+    echo "FAIL: no opencode-agents entry in $CLI_CONFIG" >&2; status=1
   else
     echo "cli.json entry: $entry"
     if [[ $entry == github:* || $entry == git+* || $entry == opencode-native-sidebar* ]]; then
@@ -100,7 +100,7 @@ if os.path.exists(config):
     data = json.load(open(config), object_pairs_hook=collections.OrderedDict)
 plugins = [
     entry for entry in data.get("plugins", [])
-    if not (isinstance(entry, str) and "opencode-native-sidebar" in entry)
+    if not (isinstance(entry, str) and ("opencode-agents" in entry or "opencode-native-sidebar" in entry))
 ]
 plugins.append(target)
 data["plugins"] = plugins
