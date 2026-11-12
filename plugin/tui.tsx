@@ -8,12 +8,27 @@
 // its model variant, and spins only next to the agents that are working right
 // now. The roster and activity come straight from the host's data layer, so
 // unlike the v1 plugin there is no server half and no snapshot file to sync.
+import { StyledText, fg } from "@opentui/core";
 import { Plugin } from "@opencode/plugin/tui";
 import { createMemo, createSignal } from "solid-js";
 
 type Context = Plugin.Context;
 
 const SPINNER = ["⠋", "⠙", "⠹", "⠸", "⠼", "⠴", "⠦", "⠧", "⠇", "⠏"];
+
+type Theme = Plugin.Context["theme"];
+
+// The theme's RGBA and OpenTUI's ColorInput come from different packages, so the
+// types are nominally distinct even though the values are identical at runtime.
+const paint = (color: unknown, text: string) => fg(color as never)(text);
+
+/** Effort is shown through the theme's text ramp: quiet at low, brightest at high. */
+function effortColor(theme: Theme, variant: string): unknown {
+  const v = variant.toLowerCase();
+  if (v === "minimal" || v === "none" || v === "low") return theme.text.faint;
+  if (v === "medium") return theme.text.muted;
+  return theme.text.base;
+}
 
 // One pair of clocks for every mounted panel. The host renders `sidebar.content`
 // in more than one place (the side region and the narrow-screen layout), so a
@@ -47,24 +62,31 @@ function NativePanel(props: { ctx: Context; sessionID: string }) {
   // than mapped into child elements.
   const panel = createMemo(() => {
     beat();
+    const theme = props.ctx.theme;
     const glyph = SPINNER[frame() % SPINNER.length];
     const busy = busyAgents();
     const agents = (props.ctx.data.location.agent.list() ?? []).filter((agent) => !agent.hidden);
-    if (agents.length === 0) return "Native";
-    const lines = ["Native"];
+    const chunks = [paint(theme.text.muted, "Native")];
+
     for (const agent of agents) {
-      const ticker = busy.has(String(agent.id)) ? glyph : " ";
-      const variant = agent.model?.variant ? `#${agent.model.variant}` : "";
+      const variant = agent.model?.variant ?? "";
       const model = agent.model?.id ?? "default";
-      lines.push(`${agent.name.padEnd(13)}${ticker} ${variant}`.trimEnd());
-      lines.push(`  ${model}`);
+      const running = busy.has(String(agent.id));
+
+      chunks.push(paint(theme.text.base, `\n${agent.name.padEnd(13)}`));
+      if (variant) chunks.push(paint(effortColor(theme, variant), `#${variant}`));
+      // Spinner sits to the left of the model, on its own line.
+      chunks.push(paint(theme.text.faint, "\n  "));
+      chunks.push(paint(running ? theme.text.feedback.success.base : theme.text.faint, running ? glyph : " "));
+      chunks.push(paint(theme.text.faint, ` ${model}`));
     }
-    return lines.join("\n");
+
+    return new StyledText(chunks);
   });
 
   return (
     <box style={{ flexDirection: "column", paddingLeft: 1, paddingRight: 1 }}>
-      <text wrapMode="none">{panel()}</text>
+      <text content={panel()} wrapMode="none" />
     </box>
   );
 }
