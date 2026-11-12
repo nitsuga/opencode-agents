@@ -44,6 +44,15 @@ have an ADR; once decided they move to the
 forks (not yet opened) can be listed here too — the single backlog. Incremental
 *work* that needs no fork lives in [PROGRESS](./PROGRESS.md) "Next", not here.
 
+Candidates (not yet opened as forks):
+
+- **Agent output panel** ([#2](https://github.com/nitsuga/opencode-agents/issues/2)) —
+  show a working agent's output in a `session.panel` instead of navigating to its
+  child session (which drops the sidebar). Tabs cannot do this: `tabs.open` and
+  `tabs.focus` report success for a child session and do nothing. The open design
+  questions are message selection, live streaming, and one panel vs a tab per
+  agent.
+
 
 ## Fork lifecycle
 
