@@ -9,7 +9,7 @@
 // now. The roster and activity come straight from the host's data layer, so
 // unlike the v1 plugin there is no server half and no snapshot file to sync.
 import { Plugin } from "@opencode/plugin/tui";
-import { For, createMemo, createSignal } from "solid-js";
+import { createMemo, createSignal } from "solid-js";
 
 type Context = Plugin.Context;
 
@@ -41,31 +41,30 @@ function NativePanel(props: { ctx: Context; sessionID: string }) {
     return busy;
   });
 
-  const rows = createMemo(() => {
+  // One text node for the whole panel. Control-flow components (`For`, `Show`)
+  // do not reconcile when this file is loaded from an installed package under
+  // node_modules, and static/reactive text does — so the rows are joined rather
+  // than mapped into child elements.
+  const panel = createMemo(() => {
     beat();
     const glyph = SPINNER[frame() % SPINNER.length];
     const busy = busyAgents();
-    return (props.ctx.data.location.agent.list() ?? [])
-      .filter((agent) => !agent.hidden)
-      .map((agent) => ({
-        name: agent.name,
-        variant: agent.model?.variant ? `#${agent.model.variant}` : "",
-        model: agent.model?.id ?? "default",
-        ticker: busy.has(String(agent.id)) ? glyph : " ",
-      }));
+    const agents = (props.ctx.data.location.agent.list() ?? []).filter((agent) => !agent.hidden);
+    if (agents.length === 0) return "Native";
+    const lines = ["Native"];
+    for (const agent of agents) {
+      const ticker = busy.has(String(agent.id)) ? glyph : " ";
+      const variant = agent.model?.variant ? `#${agent.model.variant}` : "";
+      const model = agent.model?.id ?? "default";
+      lines.push(`${agent.name.padEnd(13)}${ticker} ${variant}`.trimEnd());
+      lines.push(`  ${model}`);
+    }
+    return lines.join("\n");
   });
 
   return (
     <box style={{ flexDirection: "column", paddingLeft: 1, paddingRight: 1 }}>
-      <text>Native</text>
-      <For each={rows()}>
-        {(row) => (
-          <box style={{ flexDirection: "column" }}>
-            <text wrapMode="none">{`${row.name.padEnd(13)}${row.ticker} ${row.variant}`.trimEnd()}</text>
-            <text wrapMode="none">{`  ${row.model}`}</text>
-          </box>
-        )}
-      </For>
+      <text wrapMode="none">{panel()}</text>
     </box>
   );
 }
