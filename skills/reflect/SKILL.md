@@ -70,7 +70,7 @@ For each session, analyze and produce a structured summary:
   ],
   "duration_minutes": 18,
   "models_used": ["opencode/mimo-v2.5-free"],
-  "agents_used": ["orchestrator", "fixer", "explorer"],
+  "agents_used": ["orchestrator", "general", "explore"],
   "tools_used": ["Read", "Edit", "Bash"],
   "confidence": 0.85
 }

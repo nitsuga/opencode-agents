@@ -19,4 +19,3 @@ for the link-file + pinned-replacement + ADR requirements that come with it.
 - Large binaries (PDFs, media) are good candidates for
   [git-lfs](https://git-lfs.com/) — track them in `.gitattributes`.
 
-This README is a placeholder; keep it or delete it once real sources land.

@@ -32,7 +32,7 @@ Definitions live in [`../agents/`](../agents/); the model pins live in
   external research (ADR 0004) its output became the material the orchestrator
   writes briefs from, which `low` under-serves. `medium` keeps it cheap.
 - **`general` at `high`** — implementation is where silent mistakes cost the most;
-  the behavioural discipline is in [`../agents/general.md`](../agents/general.md).
+  the behavioral discipline is in [`../agents/general.md`](../agents/general.md).
 - **`oracle` at `high` on a different model family** — `deepseek-v4.1-flash` gives
   review independence from the muse-spark workers. Deliberately **not** raised to
   `max`: higher rungs showed diminishing quality per token and per second.

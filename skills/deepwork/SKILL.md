@@ -54,7 +54,7 @@ work. The file only needs to remain useful as persistent session state and shoul
 capture, as applicable:
 
 - current goal and understanding;
-- researched, factual context from `@librarian` to avoid oracle doing its own
+- researched, factual context from `@explore` to avoid oracle doing its own
   research;
 - plan drafts, Oracle review budget/gates, and review notes;
 - implementation phases and status;
@@ -104,7 +104,7 @@ Use the scheduler model throughout:
   decision or risk to review in the deepwork file; provide this context to
   Oracle with the accepted research and file references;
 - when the phase changes module boundaries, dependency direction, or file
-  placement, run an `@explorer` structure scan in parallel with the Oracle gate;
+  placement, run an `@explore` structure scan in parallel with the Oracle gate;
 - reconcile review findings, perform one bounded remediation pass for material
   issues, and validate that pass with focused evidence;
 - create a focused commit when the phase is an independently valid delivery
@@ -145,7 +145,7 @@ After designer work:
   change visual structure or interaction intent;
 - route follow-up visual, responsive, motion, hierarchy, polish, or
   component-feel changes back to `@designer`;
-- use `@fixer` only for bounded mechanical follow-up that preserves the design
+- use `@general` only for bounded mechanical follow-up that preserves the design
   exactly, such as wiring, tests, type fixes, or non-visual behavior changes;
 - if design intent must change, record why in the deepwork file before changing
   it.

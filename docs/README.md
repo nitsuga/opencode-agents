@@ -7,4 +7,3 @@ plan (that's `planning/`).
 Keep it short and current; link to `context/` or `references/` for depth rather
 than restating them here.
 
-This README is a placeholder; keep it or delete it once real guides land.

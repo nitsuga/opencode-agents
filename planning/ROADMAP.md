@@ -14,7 +14,7 @@ variants and live activity.
 
 - **In**: the TUI panel, its roster and activity derivation, local plugin loading.
 - **Out (for now)**: the browser/desktop UI (a separate `gui-experimental` part
-  against the `Panel` registry), any server-side behaviour, and the retired v1
+  against the `Panel` registry), any server-side behavior, and the retired v1
   plugin's snapshot-file approach.
 
 ## Phases

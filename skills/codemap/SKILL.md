@@ -50,7 +50,7 @@ This creates:
 - `.slim/codemap.json` - File and folder hashes for change detection
 - Empty `codemap.md` files in all relevant subdirectories
 
-4. **Delegate codemap writing to Fixer agents** - Spawn one fixer per folder to read code and create or update its specific `codemap.md` file.
+4. **Delegate codemap writing to `general`** - Spawn one `general` task per folder to read code and create or update its specific `codemap.md` file.
 
 ### Step 3: Detect Changes (If state already exists)
 
@@ -67,7 +67,7 @@ node ~/.config/opencode/skills/codemap/scripts/codemap.mjs changes \
    - Modified files
    - Affected folders
 
-3. **Only update affected codemaps** - Spawn one fixer per affected folder to update its `codemap.md`.
+3. **Only update affected codemaps** - Spawn one `general` task per affected folder to update its `codemap.md`.
 4. **Run update** to save new state:
 
 ```bash
@@ -108,7 +108,7 @@ This is idempotent - repeated codemap runs will detect the existing section and 
 
 ## Codemap Content
 
-Fixers are responsible for writing `codemap.md` files during this workflow. Use precise technical terminology to document the implementation:
+`general` is responsible for writing `codemap.md` files during this workflow. Use precise technical terminology to document the implementation:
 
 - **Responsibility** - Define the specific role of this directory using standard software engineering terms (e.g., "Service Layer", "Data Access Object", "Middleware").
 - **Design Patterns** - Identify and name specific patterns used (e.g., "Observer", "Singleton", "Factory", "Strategy"). Detail the abstractions and interfaces.

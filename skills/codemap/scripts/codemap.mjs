@@ -202,7 +202,7 @@ export function createEmptyCodemap(folderPath, folderName) {
 
   const content = `# ${folderName}/
 
-<!-- Fixer: Fill in this section with architectural understanding -->
+<!-- General: Fill in this section with architectural understanding -->
 
 ## Responsibility
 

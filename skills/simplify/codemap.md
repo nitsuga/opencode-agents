@@ -26,11 +26,11 @@
   computed in `getSkillPermissionsForAgent()`.
 - In practice the workflow is read-only and context-driven: simplify instructions require understanding of callers,
   edge cases, and tests before mutation, then apply local, scoped refactors with validation.
-- Consumers (Fixer/Oracle/Reviewer tasks) rely on this contract as operational constraints, not as executable TypeScript.
+- Consumers (`general`/`oracle` tasks) rely on this contract as operational constraints, not as executable TypeScript.
 
 ## Integration
 
 - Installed by plugin installer (`installCustomSkills`) using `src/cli/install.ts` via `installCustomSkill()`.
 - Permission surface is enforced by hook layer in `src/hooks/filter-available-skills/index.ts` (`permissionRules`).
 - Release integrity: `scripts/verify-release-artifact.ts` checks for `src/skills/simplify/SKILL.md` in package tarballs.
-- Operationally paired with codemap/fixer flows in `src/index.ts` orchestrations for post-feature readability hardening.
+- Operationally paired with codemap/`general` flows in `src/index.ts` orchestrations for post-feature readability hardening.

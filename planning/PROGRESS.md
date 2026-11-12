@@ -14,6 +14,10 @@ implements, and `oracle`, `designer`, `observer` cover review, UI, and media. Th
 config and agent definitions are tracked here and symlinked into
 `~/.config/opencode`, so edits land on the next turn of a running session.
 
+The sidebar panel lists each agent with its model variant and spins for the agents
+actually working; the header collapses to `▶ Agents (8 · ⠹ 1 working)`, a click on
+a working agent shows its output, and `<leader>o` returns to the orchestrator.
+
 ## In progress
 
 - Nothing mid-change.

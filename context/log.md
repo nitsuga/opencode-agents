@@ -2,6 +2,18 @@
 
 ## 2026-11-12
 
+* Doc drift sweep after the rename and the roster consolidation. Fixed in
+  `skills/`: references to retired agents (`@librarian` 11×, `@fixer`, `@explorer`)
+  now name `@explore`/`@general`, and the generated codemap header says `General:`.
+  Fixed American spelling in `context/agents.md`, `context/log.md`,
+  `context/workflow-rationale.md`, and `planning/ROADMAP.md`; dropped the template
+  "placeholder" lines from `docs/` and `references/`; refreshed PROGRESS's Now to
+  describe the panel. Verified unchanged: dependency pins, `context/agents.md`'s
+  model table against `/api/agent`, script paths, issue links, no tracked secrets,
+  and `scripts/lint.sh --strict` clean. Deliberately left as-is:
+  `context/CONVENTIONS.md`'s `NNNN-slug` convention examples and the example
+  directory links inside `skills/codemap/SKILL.md` (illustrative, not repo links).
+
 * Agent rows are clickable: a running agent navigates to its child session, and the
   orchestrator row is always clickable so there is a way back. Hover tints the name
   on clickable rows. Two findings shaped it: `ui.tabs.focus()` returns `true` for a
@@ -19,10 +31,10 @@
   and the click handler was a no-op — OpenTUI renderables take `onMouseDown`, not
   a JSX `on:click` event.
 
-* Plugin panel: rows are now intrinsic text nodes with theme colours — agent name
+* Plugin panel: rows are now intrinsic text nodes with theme colors — agent name
   at `text.base`, effort on the text ramp, model at `text.faint`, spinner in
   `text.feedback.success` — and the spinner moved to the left of the model. Theme
-  colours are converted into the renderer's own `RGBA` class; passing the theme's
+  colors are converted into the renderer's own `RGBA` class; passing the theme's
   instances renders nothing.
 * Dropped `config/cli.json` from tracking and from `link-config.sh`: OpenCode
   rewrites `cli.json` when it persists TUI settings, replacing the symlink with a
