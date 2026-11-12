@@ -1,0 +1,20 @@
+# OPTIONAL — docs lint. DISABLED by default: the ".disabled" suffix makes GitHub
+# ignore this file, so it never runs until you enable it.
+#
+# To enable it in your project:
+#   git mv .github/workflows/link-check.yml.disabled .github/workflows/link-check.yml
+#   git commit -m "Enable docs lint" && git push
+#
+# It then runs `scripts/lint.sh` on every push / pull request, failing on FAIL
+# checks only — warnings are advisory heuristics, not a CI contract. The
+# canonical list of checks lives in that script's docstring — this workflow is
+# only the entry point, so the rules have one home rather than a second copy here.
+name: link-check
+on: [push, pull_request]
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Lint docs
+        run: ./scripts/lint.sh
