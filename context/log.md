@@ -7,6 +7,10 @@
   `▶ Agents (8 · ⠹ 1 working)` while work is in flight, so the spinner and the
   count keep reporting activity when the rows are hidden. Toggle with `ctrl+x z`
   or by clicking the header; the state persists through `storage.store`.
+  Follow-ups fixed: the block was inset by one cell and the caret was greyed out
+  (both now match the MCP section, caret at the same column and in `text.base`),
+  and the click handler was a no-op — OpenTUI renderables take `onMouseDown`, not
+  a JSX `on:click` event.
 
 * Plugin panel: rows are now intrinsic text nodes with theme colours — agent name
   at `text.base`, effort on the text ramp, model at `text.faint`, spinner in

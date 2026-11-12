@@ -114,12 +114,12 @@ function AgentPanel(props: {
   };
 
   return (
-    <box style={{ flexDirection: "column", paddingLeft: 1, paddingRight: 1 }}>
-      <box style={{ flexDirection: "row" }}>
-        <text wrapMode="none" on:click={toggle} style={{ fg: color(theme().text.muted) }}>
+    <box style={{ flexDirection: "column" }}>
+      <box style={{ flexDirection: "row" }} onMouseDown={toggle}>
+        <text wrapMode="none" style={{ fg: color(theme().text.base) }}>
           {collapsed() ? "\u25b6 " : "\u25bc "}
         </text>
-        <text wrapMode="none" on:click={toggle} style={{ fg: color(theme().text.base) }}>
+        <text wrapMode="none" style={{ fg: color(theme().text.base) }}>
           Agents
         </text>
         {collapsed() ? (
