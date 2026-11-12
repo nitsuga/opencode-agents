@@ -91,8 +91,20 @@ The sidebar is toggled with `ctrl+x b` (leader `ctrl+x`). Its open/closed state
 persists between runs, so a single toggle may close rather than open it.
 
 An agent spins only while a session in its family is running with that agent: the
-orchestrator spins while it waits for a subagent, the spawned `scout` spins while
+orchestrator spins while it waits for a subagent, the spawned subagent spins while
 it works, and everything else stays blank.
+
+The panel header is a caret you can collapse (`ctrl+x z`, or click it):
+
+```
+▼ Agents                        ▶ Agents (8)
+orchestrator #high                ▶ Agents (8 · ⠹ 1 working)
+    muse-spark-1.3-contributor
+```
+
+Collapsed it shows the agent count, and while work is in flight a live spinner
+plus how many agents are working — so hiding the rows does not hide the activity.
+The collapsed state persists across restarts.
 
 ## Develop
 

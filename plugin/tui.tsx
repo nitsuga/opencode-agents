@@ -47,7 +47,17 @@ function effortColor(theme: Theme, variant: string): string | TuiColor {
   return theme.text.base;
 }
 
-function NativePanel(props: { ctx: Context; sessionID: string }) {
+type Collapse = readonly [
+  { readonly collapsed: boolean },
+  (mutation: (draft: { collapsed: boolean }) => void) => void | Promise<void>,
+];
+
+function AgentPanel(props: {
+  ctx: Context;
+  sessionID: string;
+  collapsed: Collapse[0];
+  setCollapsed: Collapse[1];
+}) {
   // Which agents are working. A subagent runs in a child session, so the whole
   // session family has to be consulted — checking only the visible session
   // would spin every row whenever anything was running.
@@ -82,13 +92,43 @@ function NativePanel(props: { ctx: Context; sessionID: string }) {
   });
 
   const theme = () => props.ctx.theme;
+  const collapsed = () => props.collapsed.collapsed;
+  const working = createMemo(() => rows().filter((row) => row.running).length);
+
+  // Collapsed shows the count, plus what is working, so hiding the rows does not
+  // also hide the activity the panel exists to report.
+  const summary = createMemo(() => {
+    const total = rows().length;
+    const busy = working();
+    if (busy === 0) return ` (${total})`;
+    // A collapsed panel still reports progress: the spinner keeps ticking so the
+    // header itself shows that work is in flight.
+    const glyph = SPINNER[frame() % SPINNER.length];
+    return ` (${total} \u00b7 ${glyph} ${busy} working)`;
+  });
+
+  const toggle = () => {
+    void props.setCollapsed((draft) => {
+      draft.collapsed = !draft.collapsed;
+    });
+  };
 
   return (
     <box style={{ flexDirection: "column", paddingLeft: 1, paddingRight: 1 }}>
-      <text wrapMode="none" style={{ fg: color(theme().text.muted) }}>
-        Native
-      </text>
-      {rows().map((row) => (
+      <box style={{ flexDirection: "row" }}>
+        <text wrapMode="none" on:click={toggle} style={{ fg: color(theme().text.muted) }}>
+          {collapsed() ? "\u25b6 " : "\u25bc "}
+        </text>
+        <text wrapMode="none" on:click={toggle} style={{ fg: color(theme().text.base) }}>
+          Agents
+        </text>
+        {collapsed() ? (
+          <text wrapMode="none" style={{ fg: color(working() > 0 ? theme().text.feedback.success.base : theme().text.faint) }}>
+            {summary()}
+          </text>
+        ) : null}
+      </box>
+      {collapsed() ? null : rows().map((row) => (
         <box style={{ flexDirection: "column" }}>
           <box style={{ flexDirection: "row" }}>
             <text wrapMode="none" style={{ fg: color(theme().text.base) }}>
@@ -121,9 +161,38 @@ export default Plugin.define({
   id: "native-sidebar",
   setup(ctx) {
     void ctx.data.location.agent.sync().catch(() => {});
+    const [collapsed, setCollapsed] = ctx.storage.store("native-sidebar", {
+      initial: { collapsed: false },
+    });
+
+    ctx.keymap.layer(() => ({
+      mode: "global",
+      commands: [
+        {
+          id: "native-sidebar.toggle",
+          title: "Toggle agent list",
+          description: "Collapse or expand the Agents panel in the sidebar",
+          palette: true,
+          bind: "<leader>z",
+          run: () => {
+            void setCollapsed((draft) => {
+              draft.collapsed = !draft.collapsed;
+            });
+          },
+        },
+      ],
+    }));
+
     const dispose = ctx.ui.slot({
       append: "sidebar.content",
-      render: (input) => <NativePanel ctx={ctx} sessionID={input.sessionID} />,
+      render: (input) => (
+        <AgentPanel
+          ctx={ctx}
+          sessionID={input.sessionID}
+          collapsed={collapsed}
+          setCollapsed={setCollapsed}
+        />
+      ),
     });
     return () => dispose();
   },

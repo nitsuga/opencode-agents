@@ -2,6 +2,12 @@
 
 ## 2026-11-12
 
+* Panel header renamed `Native` → `Agents` with a collapse caret, matching the MCP
+  section: `▼ Agents` expanded, `▶ Agents (8)` collapsed, and
+  `▶ Agents (8 · ⠹ 1 working)` while work is in flight, so the spinner and the
+  count keep reporting activity when the rows are hidden. Toggle with `ctrl+x z`
+  or by clicking the header; the state persists through `storage.store`.
+
 * Plugin panel: rows are now intrinsic text nodes with theme colours — agent name
   at `text.base`, effort on the text ramp, model at `text.faint`, spinner in
   `text.feedback.success` — and the spinner moved to the left of the model. Theme
