@@ -43,7 +43,14 @@ directory reload automatically).
 
 - Claims `append: "sidebar.content"`; the slot passes `{ sessionID }`.
 - Roster: `ctx.data.location.agent.list()`, filtered to non-hidden agents.
-- Activity: `ctx.data.session.status(sessionID) === "running"` drives the spinner.
+- Activity: an agent spins only while a session **in its family** is running with
+  that agent — the orchestrator spins while it waits, a spawned `scout` spins
+  while it works, and idle agents stay blank. Checking just the visible session
+  would spin every row whenever anything ran.
+- Clocks: one shared pair of timers per module — 60 ms for the spinner frames
+  (0.6 s per revolution) and 1 s for the roster/activity refresh. The host
+  renders `sidebar.content` in more than one place, so per-instance timers
+  double both the frame rate and the work.
 - One row per agent, two lines each: `<name> #variant` then the model id. The
   panel is roughly 35 columns wide, so name + model on one line truncates the
   variant away — the part that actually distinguishes agents.
@@ -53,8 +60,6 @@ directory reload automatically).
 
 ## Known gaps
 
-- Built-in agents without an explicit model (`Build`, `Plan`) render with no
-  model line; v1 showed `default` for them.
-- The spinner path is implemented but has not been observed against a running
-  session yet.
 - Distribution is undecided: local path today, npm or a Git URL later.
+- The browser/desktop UI is a different extension surface (`gui-experimental`
+  with the `Panel` registry), so this panel is terminal-only.
