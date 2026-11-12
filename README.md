@@ -25,19 +25,30 @@ this is a single TUI plugin with no server part and no sidecar file.
 
 ## Install
 
-Point `~/.config/opencode/cli.json` at a checkout of this repo:
+```bash
+git clone git@github.com:nitsuga/opencode-native-sidebar.git
+cd opencode-native-sidebar
+./scripts/install.sh
+```
+
+The script clones (or fast-forwards) a checkout at
+`~/.local/share/opencode-native-sidebar`, installs its dependencies, and points
+`plugins` in `~/.config/opencode/cli.json` at it. Re-run it to update; `--check`
+verifies the configured install is intact; `--target DIR` installs elsewhere.
+
+Doing it by hand is the same three steps: put a checkout somewhere stable, run
+`npm ci --omit=dev`, and add the **directory** (not a file) to `cli.json`:
 
 ```json
 {
   "$schema": "https://opencode.ai/config.json",
-  "plugins": ["/home/eric/workspaces/opencode-native-sidebar"]
+  "plugins": ["/home/eric/.local/share/opencode-native-sidebar"]
 }
 ```
 
-The entry is a **directory**, not a file, and that directory must have `tui.tsx` at
-its root. Do not add an `exports` field to `package.json` while loading this way:
-the host then resolves the part by package name, which only works for an installed
-package, and silently loads nothing for a checkout.
+That directory must have `tui.tsx` at its root, and its `package.json` must not
+carry an `exports` field — with one, the host resolves the part by package name,
+which only works for an installed package, and a checkout silently loads nothing.
 
 ### Why not a package install
 
@@ -47,7 +58,8 @@ the panel's first paint renders. But **no reactive update ever reaches the
 renderer**: not from the plugin's signals, and not from the host's own `storage`
 store. Measured on OpenCode 2.2.7: a checkout shows all agents updating live; the
 installed package renders once with whatever the first paint saw and then stays
-frozen. Until that behaves, use the checkout path.
+frozen. Tracked in [issue #1](https://github.com/nitsuga/opencode-native-sidebar/issues/1);
+until it behaves, use the checkout path (`scripts/install.sh`).
 
 Two further packaging gotchas, both load-blocking:
 

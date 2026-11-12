@@ -2,6 +2,15 @@
 
 ## 2026-11-12
 
+* Added `scripts/install.sh`: clone or fast-forward a checkout at
+  `~/.local/share/opencode-native-sidebar`, `npm ci --omit=dev`, and point
+  `cli.json` at it (`--check` verifies, `--target` relocates). This is the
+  distribution workaround for [issue #1](https://github.com/nitsuga/opencode-native-sidebar/issues/1),
+  filed with the measurement that package installs get no reactive updates.
+  Installed and verified: the panel renders agents live from the install path.
+
+## 2026-11-12
+
 * Tried moving the install from a checkout to a published package
   (`opencode plugin add github:nitsuga/opencode-native-sidebar`). It loads and
   paints, but receives no reactive updates: measured `host-n=12 ours=0 store=0`

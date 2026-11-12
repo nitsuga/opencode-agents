@@ -8,9 +8,10 @@ chronological history (what landed when, decision detail) lives in
 
 ## Now
 
-Loaded from a checkout via `~/.config/opencode/cli.json`, which is the only path
-that renders live: the panel lists every visible agent with its model variant and
-spins for the agents actually working.
+Installed at `~/.local/share/opencode-native-sidebar` by `scripts/install.sh`,
+which keeps `cli.json` pointing at a checkout — the only path that renders live.
+The panel lists every visible agent with its model variant and spins for the
+agents actually working.
 
 ## In progress
 
@@ -18,12 +19,12 @@ spins for the agents actually working.
 
 ## Next
 
-1. Report the package-install reactivity limitation upstream (OpenCode 2.2.7:
-   installed plugins get no re-render), then re-test on a later host build.
+1. Re-test a package install once [issue #1](https://github.com/nitsuga/opencode-native-sidebar/issues/1)
+   (no reactive updates from an installed package) is resolved, and switch
+   `scripts/install.sh` over if it is.
 
 ## Known gaps
 
-- Installed packages (`github:`/npm) paint once and then freeze — see ADR 0002.
-  This blocks real distribution.
+- Real distribution is blocked by issue #1; the local install is the workaround.
 - Terminal-only: the browser and desktop clients need a `gui-experimental` part.
 - No automated tests; verification is running OpenCode and watching the panel.
