@@ -73,8 +73,10 @@ Ship **one TUI part and no server part**, at `tui.tsx` in the repo root:
 
 - The panel is **terminal-only**. The browser and desktop clients use a different
   extension surface, so a GUI part would be a second implementation.
-- `tui.tsx` must stay at the repo root — moving it into `src/` breaks local
-  loading unless `exports` is added back.
+- `plugin/tui.tsx` must stay at its directory's root — moving it deeper breaks
+  local loading unless `exports` is added back. The plugin lives in `plugin/` since
+  the repo also carries the agent definitions (ADR 0003), so the install target is
+  `<install>/plugin`.
 - Dependency pins must track the host (`@opencode/plugin` 2.2.7,
   `@opentui/*` 0.8.4, `solid-js` 1.9.19). Only `effect` and `@opencode/plugin` are
   provided at runtime.

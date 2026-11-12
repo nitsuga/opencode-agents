@@ -5,7 +5,7 @@
 # see issue #1 — so the working path is a checkout at a stable location, outside
 # any dev tree, with its dependencies installed. This script owns that:
 #
-#   scripts/install.sh                 # clone/update into ~/.local/share/opencode-native-sidebar
+#   scripts/install.sh                 # clone/update into ~/.local/share/opencode-agents
 #   scripts/install.sh --check         # verify the configured install is intact
 #   scripts/install.sh --target DIR    # install somewhere else
 #   scripts/install.sh --from PATH     # clone from a local path instead of GitHub
@@ -13,8 +13,9 @@
 # Safe to re-run: it fast-forwards the install to origin/main and reinstalls deps.
 set -euo pipefail
 
-REPO_URL="${REPO_URL:-git@github.com:nitsuga/opencode-native-sidebar.git}"
-TARGET="${TARGET:-$HOME/.local/share/opencode-native-sidebar}"
+REPO_URL="${REPO_URL:-git@github.com:nitsuga/opencode-agents.git}"
+TARGET="${TARGET:-$HOME/.local/share/opencode-agents}"
+PLUGIN="$TARGET/plugin"
 CLI_CONFIG="${CLI_CONFIG:-$HOME/.config/opencode/cli.json}"
 check_only=false
 from=""
@@ -82,16 +83,16 @@ else
   [[ -z $from ]] || git -C "$TARGET" remote set-url origin "$REPO_URL"
 fi
 
-if [[ ! -f $TARGET/tui.tsx ]]; then
-  echo "tui.tsx is missing in $TARGET — is that really this repo?" >&2
+if [[ ! -f $PLUGIN/tui.tsx ]]; then
+  echo "plugin/tui.tsx is missing in $TARGET — is that really this repo?" >&2
   exit 1
 fi
 
 echo "installing dependencies"
-(cd "$TARGET" && npm ci --omit=dev --no-audit --no-fund >/dev/null)
+(cd "$PLUGIN" && npm ci --omit=dev --no-audit --no-fund >/dev/null)
 
 # Point cli.json at the checkout, replacing any other entry for this plugin.
-python3 - "$CLI_CONFIG" "$TARGET" <<'PY'
+python3 - "$CLI_CONFIG" "$PLUGIN" <<'PY'
 import collections, json, os, sys
 config, target = sys.argv[1], os.path.realpath(sys.argv[2])
 data = collections.OrderedDict()
@@ -108,5 +109,5 @@ open(config, "w").write(json.dumps(data, indent=2) + "\n")
 print("cli.json plugins:", plugins)
 PY
 
-echo "installed $(git -C "$TARGET" rev-parse --short HEAD) at $TARGET"
+echo "installed $(git -C "$TARGET" rev-parse --short HEAD) at $PLUGIN"
 echo "restart the TUI to pick it up (ctrl+c, then opencode); sidebar toggles with ctrl+x b"

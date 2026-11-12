@@ -1,0 +1,9 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "plugins": [
+    "/home/eric/.local/share/opencode-native-sidebar"
+  ],
+  "session": {
+    "sidebar": "auto"
+  }
+}

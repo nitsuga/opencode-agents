@@ -2,7 +2,7 @@
 okf_version: "0.2"
 ---
 
-# opencode-native-sidebar Knowledge Bundle
+# opencode-agents Knowledge Bundle
 
 Agent-facing knowledge base for this project, in
 [OKF](https://github.com/GoogleCloudPlatform/knowledge-catalog/blob/main/okf/SPEC.md)

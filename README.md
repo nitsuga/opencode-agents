@@ -1,27 +1,35 @@
-# opencode-native-sidebar
+# opencode-agents
 
-An OpenCode v2 TUI plugin: a **Native** panel in the terminal sidebar listing every
-agent with its model variant, and a spinner next to whichever agents are working
-right now.
+Eric's OpenCode setup, versioned: the agent and delegation definitions, the skills
+they use, the configuration that binds them, and the `Native` sidebar plugin that
+shows which agents are working.
+
+The agents are the point. They replaced an ad-hoc mix of custom and native
+definitions with one canonical set: an `orchestrator` that routes work, read-only
+specialists for local search and review, and `general` for implementation.
 
 ```
-Native
-orchestrator   ⠹ #high
-  muse-spark-1.3-contributor
-Build
-  default
-Explore        ⠋ #low
-  muse-spark-1.3-contributor
-oracle         #high
-  deepseek-v4.1-flash
+agents/          agent and delegation definitions (the source of truth)
+skills/          reusable skills those agents invoke
+config/          opencode.jsonc, cli.json, and the runtime AGENTS.md
+plugin/          the Native sidebar plugin (OpenCode v2 TUI)
+scripts/         install.sh (plugin) and link-config.sh (config)
 ```
 
-Ported from the OpenCode **v1** plugin of the same name. The v1 version had two
-halves: a server plugin that polled the agent roster into
-a per-project snapshot under `storage/native-sidebar/` every 10 seconds, and a TUI
-plugin that rendered the snapshot into v1's `sidebar_content` slot. Neither is
-needed in v2 — the host already publishes the roster and the activity state — so
-this is a single TUI plugin with no server part and no sidecar file.
+## Install
+
+Two independent halves. The config is symlinked so edits are live and versioned;
+the plugin is installed as a checkout because a package install cannot update
+reactively ([issue #1](https://github.com/nitsuga/opencode-agents/issues/1)).
+
+```bash
+git clone git@github.com:nitsuga/opencode-agents.git
+cd opencode-agents
+./scripts/link-config.sh     # agents/, skills/, config/ -> ~/.config/opencode
+./scripts/install.sh         # plugin -> ~/.local/share/opencode-agents/plugin
+```
+
+Both are idempotent and take `--check` to report drift without changing anything.
 
 ## Install
 

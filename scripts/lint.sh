@@ -71,7 +71,7 @@ def rel(p: Path) -> str:
 md_files = sorted(
     p
     for p in ROOT.glob("**/*.md")
-    if not any(part.startswith(".") or part == "node_modules" for part in p.relative_to(ROOT).parts)
+    if not any(part.startswith(".") or part in ("node_modules", "agents", "skills", "config", "plugin") for part in p.relative_to(ROOT).parts)
 )
 
 FM_RE = re.compile(r"\A---\n(.*?)\n---\n", re.DOTALL)

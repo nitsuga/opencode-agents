@@ -1,12 +1,15 @@
-# opencode-native-sidebar
+# opencode-agents
 
-An OpenCode v2 **TUI plugin**: a `Native` panel in the terminal sidebar that lists
-every agent with its model variant and spins only for the agents that are working.
+Eric's OpenCode setup, versioned: agent and delegation definitions (`agents/`),
+their skills (`skills/`), the configuration that binds them (`config/`), and the
+`Native` sidebar TUI plugin (`plugin/`).
 
-Scope: the terminal TUI only. The browser and desktop clients are a different
-extension surface (`gui-experimental` with the `Panel` registry) and are out of
-scope until someone builds that part. There is no server half — v2 already
-publishes the agent roster and session activity.
+Scope: the terminal TUI. The browser and desktop clients are a different extension
+surface (`gui-experimental` with the `Panel` registry) and are out of scope until
+someone builds that part. The plugin has no server half — v2 already publishes the
+agent roster and session activity.
+
+`config/service.json` is **never** tracked: it holds the server password.
 
 > **This repo uses an OKF-based agent documentation workflow.** The sections
 > below tell an agent *how to work* here — where knowledge, decisions, and the
@@ -105,9 +108,16 @@ So:
   Markdown, commit messages. No exempt directories: there is no vendored code
   here (`node_modules/` is installed, never edited or committed).
 - **Repo layout**:
-  - `tui.tsx` — the plugin itself; the host loads this file directly. It must stay
-    at the repo root, because a local plugin directory resolves `tui.tsx` by root
-    filename (see ADR 0002).
+  - `agents/` — agent definitions, symlinked into `~/.config/opencode/agents`.
+    Editing these changes live sessions on their next turn.
+  - `skills/` — skills, symlinked into `~/.config/opencode/skills`.
+  - `config/` — `opencode.jsonc`, `cli.json`, and the runtime `AGENTS.md`,
+    symlinked into `~/.config/opencode`. Never put a secret here.
+  - `plugin/` — the sidebar plugin. `plugin/tui.tsx` must stay at that
+    directory's root, because a local plugin directory resolves `tui.tsx` by root
+    filename (ADR 0002).
+  - `scripts/` — `link-config.sh` (symlink config) and `install.sh` (install the
+    plugin). Both are idempotent and support `--check`.
   - `package.json`, `tsconfig.json` — dependency pins and JSX settings for
     `tsc --noEmit`.
   - `context/` — agent knowledge bundle (maintain this).

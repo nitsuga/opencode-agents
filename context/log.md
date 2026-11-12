@@ -2,6 +2,15 @@
 
 ## 2026-11-12
 
+* Renamed to `opencode-agents` and took on the OpenCode configuration
+  ([ADR 0003](./decisions/0003-track-opencode-config.md)): `agents/`, `skills/`,
+  `config/{opencode.jsonc,cli.json,AGENTS.md}` are tracked and symlinked into
+  `~/.config/opencode` by `scripts/link-config.sh` (`--check` reports drift). The
+  plugin moved to `plugin/`, so `scripts/install.sh` now targets
+  `~/.local/share/opencode-agents/plugin`. `service.json` stays out — it holds the
+  server password. Config backed up first to
+  `~/.local/share/opencode-backups/config-pre-symlink-*.tar.gz`.
+
 * Added `scripts/install.sh`: clone or fast-forward a checkout at
   `~/.local/share/opencode-native-sidebar`, `npm ci --omit=dev`, and point
   `cli.json` at it (`--check` verifies, `--target` relocates). This is the
