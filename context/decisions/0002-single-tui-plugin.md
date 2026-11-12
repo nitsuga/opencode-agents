@@ -81,3 +81,14 @@ Ship **one TUI part and no server part**, at `tui.tsx` in the repo root:
 - There is no automated test harness: verification is running OpenCode and
   watching the panel. Sampling a TUI to assert on it is unreliable (a fixed column
   window and sampling after the work finished both produced false negatives).
+- **A package install is not a usable delivery path yet.** `github:` installs load
+  and paint once, but receive no reactive updates — neither the plugin's signals
+  nor the host's own `storage` store propagate. A checkout renders and updates
+  live. Distribution therefore stays "point `cli.json` at a checkout" until this
+  is fixed upstream.
+- The JSX runtime must be declared per file (`@jsxImportSource @opentui/solid`),
+  because Bun skips `tsconfig.json` for files under `node_modules`; without it a
+  package install fails to load with `Cannot find package 'react'`.
+- Control-flow components (`For`, `Show`) do not render at all in a package
+  install, while intrinsic elements do — which is why the panel is a single text
+  node.

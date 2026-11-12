@@ -25,8 +25,7 @@ this is a single TUI plugin with no server part and no sidecar file.
 
 ## Install
 
-TUI-only plugins are configured separately from server plugins, in
-`~/.config/opencode/cli.json`:
+Point `~/.config/opencode/cli.json` at a checkout of this repo:
 
 ```json
 {
@@ -35,14 +34,30 @@ TUI-only plugins are configured separately from server plugins, in
 }
 ```
 
-The entry points at a **directory**, not a file. That directory must contain
-`tui.tsx` at its root: when a local plugin's `package.json` has both `name` and
-`exports`, the host resolves the part through the package name instead, which
-fails for a directory that is not installed in a `node_modules`.
+The entry is a **directory**, not a file, and that directory must have `tui.tsx` at
+its root. Do not add an `exports` field to `package.json` while loading this way:
+the host then resolves the part by package name, which only works for an installed
+package, and silently loads nothing for a checkout.
 
-A published package can be installed instead with
-`opencode plugin add nitsuga/opencode-native-sidebar` (npm or Git specs are
-accepted; filesystem paths are not).
+### Why not a package install
+
+Installing this repo as a package (`opencode plugin add
+github:nitsuga/opencode-native-sidebar`) *loads* — the host resolves `tui.tsx` and
+the panel's first paint renders. But **no reactive update ever reaches the
+renderer**: not from the plugin's signals, and not from the host's own `storage`
+store. Measured on OpenCode 2.2.7: a checkout shows all agents updating live; the
+installed package renders once with whatever the first paint saw and then stays
+frozen. Until that behaves, use the checkout path.
+
+Two further packaging gotchas, both load-blocking:
+
+- **JSX runtime per file.** Bun does not apply a project `tsconfig.json` to files
+  under `node_modules`, so a package install compiles JSX against the React
+  runtime and fails with `Cannot find package 'react'`. `tui.tsx` therefore
+  carries a `/** @jsxImportSource @opentui/solid */` pragma.
+- **Control flow does not reconcile** in a package install: `<For>`/`<Show>`
+  children never render, while intrinsic `<text>`/`<box>` do. The panel is
+  therefore one reactive text node rather than mapped children.
 
 ## Use
 

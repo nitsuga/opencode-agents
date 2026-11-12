@@ -8,10 +8,9 @@ chronological history (what landed when, decision detail) lives in
 
 ## Now
 
-The plugin works and is in daily use: the `Native` panel renders every visible
-agent with its model variant and spins only for the agents actually working.
-Verified in a live session — `orchestrator` spins while it waits, a spawned
-`scout` spins alone, and the turn end clears it.
+Loaded from a checkout via `~/.config/opencode/cli.json`, which is the only path
+that renders live: the panel lists every visible agent with its model variant and
+spins for the agents actually working.
 
 ## In progress
 
@@ -19,15 +18,12 @@ Verified in a live session — `orchestrator` spins while it waits, a spawned
 
 ## Next
 
-1. Decide distribution: publish to npm, or point at the GitHub repo with
-   `opencode plugin add nitsuga/opencode-native-sidebar`, instead of the current
-   absolute local path in `cli.json`.
-2. Add a regression check for the invisible-plugin failure mode (a config that
-   resolves `cli.json` but loads zero extra plugins) — see ADR 0002 § Consequences.
+1. Report the package-install reactivity limitation upstream (OpenCode 2.2.7:
+   installed plugins get no re-render), then re-test on a later host build.
 
 ## Known gaps
 
+- Installed packages (`github:`/npm) paint once and then freeze — see ADR 0002.
+  This blocks real distribution.
 - Terminal-only: the browser and desktop clients need a `gui-experimental` part.
 - No automated tests; verification is running OpenCode and watching the panel.
-- Dependency pins track the host by hand; a host upgrade can silently break the
-  plugin (peer versions above are not enforced anywhere).

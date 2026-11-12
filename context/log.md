@@ -2,6 +2,16 @@
 
 ## 2026-11-12
 
+* Tried moving the install from a checkout to a published package
+  (`opencode plugin add github:nitsuga/opencode-native-sidebar`). It loads and
+  paints, but receives no reactive updates: measured `host-n=12 ours=0 store=0`
+  across samples, i.e. the host's own state reads correctly at first paint while
+  neither the plugin's signals nor the host's `storage` store ever reach the
+  renderer. Reverted to the checkout path; the finding and its two packaging
+  side effects (JSX pragma, no `For`/`Show`) are in ADR 0002.
+
+## 2026-11-12
+
 * Initialized from `okf-project-template` and recorded the port in
   [`0002-single-tui-plugin`](./decisions/0002-single-tui-plugin.md) (accepted).
 * Ported the v1 `native-sidebar` plugin to OpenCode v2 as a single TUI part
